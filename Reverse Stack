@@ -1,0 +1,78 @@
+/*
+You have been given two stacks that can store integers as the data. Out of the two given stacks, 
+one is populated and the other one is empty. You are required to write a function that reverses the populated stack using the one which is empty.
+
+Input Format :
+The first line of input contains an integer N, denoting the total number of elements in the stack.
+The second line of input contains N integers separated by a single space, representing the order in which the elements are pushed into the stack.
+
+Output Format:
+The only line of output prints the order in which the stack elements are popped, all of them separated by a single space. 
+
+Constraints:
+1 <= N <= 10^3
+-2^31 <= data <= 2^31 - 1
+
+Time Limit: 1sec 
+
+*/
+************************************************************************************************************************************************************************
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+void reverseStack(stack<int> &input, stack<int> &extra) {
+    
+    if(input.size()==0)
+        {
+            return;
+        }
+    
+    //save top element in variable
+    int x=input.top();
+    //remove top element from input stack
+    input.pop();
+    
+    //recursive call //we assume 1 to n-1 tak reverse hoke aagya and we now have to input 0th element
+    reverseStack(input,extra);
+    
+    int size1 = input.size();
+    
+    //copy from input to extra
+    for(int i=0;i<size1;i++)
+        {
+            extra.push(input.top());
+            input.pop();
+        }
+    
+    //input x into input
+    input.push(x);
+    
+    int size2 = extra.size();
+    
+    //copy back from extra to input
+    for(int i=0;i<size2;i++)
+        {
+            input.push(extra.top());
+            extra.pop();
+        }
+}
+
+int main() {
+    stack<int> input, extra;
+    int size;
+    cin >> size;
+
+    for (int i = 0, val; i < size; i++) {
+        cin >> val;
+        input.push(val);
+    }
+
+    reverseStack(input, extra);
+
+    while (!input.empty()) {
+        cout << input.top() << " ";
+        input.pop();
+    }
+}
