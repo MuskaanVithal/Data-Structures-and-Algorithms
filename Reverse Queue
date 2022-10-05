@@ -1,0 +1,37 @@
+/*You have been given a queue that can store integers as the data. 
+You are required to write a function that reverses the populated queue itself without using any other data structures.
+
+Input Format:
+The first list of input contains an integer 't' denoting the number of test cases/queries to be run.
+Then the test cases follow.
+The first line input for each test case/query contains an integer N, denoting the total number of elements in the queue.
+The second line of input contains N integers separated by a single space, representing the order in which the elements are enqueued into the queue.
+
+Output Format:
+For each test case/query, the only line of output prints the order in which the queue elements are dequeued, all of them separated by a single space.
+Output for every test case/query will be printed on a new line.
+
+Constraints:
+1 <= t <= 100
+1 <= N <= 10^4
+-2^31 <= data <= 2^31 - 1
+
+Time Limit: 1sec 
+
+*/
+
+#include<queue>
+void reverseQueue(queue<int> &input) {
+    
+    if(input.size()==0){
+        return;
+    }
+    
+	int x = input.front();
+    input.pop();
+    
+    reverseQueue(input);
+    
+    input.push(x);
+    
+}
