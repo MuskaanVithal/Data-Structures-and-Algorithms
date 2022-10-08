@@ -1,0 +1,159 @@
+#include<iostream>
+#include<queue>
+#include "TreeNode.h"
+using namespace std;
+
+template<typename T>
+class TreeNode{
+    public:
+    T data;
+    vector<TreeNode<T>*> children;        
+    TreeNode(T data){
+        this -> data = data;
+    }
+    ~TreeNode(){
+        for (int i = 0; i < children.size(); i++){delete children[i];}
+    }
+};
+
+//print nodes at level k where root node is level 0
+void printAtLevelK(TreeNode<int>* root, int k){
+    if(root==NULL) return;
+    if(k==0){
+        cout<<root->data<<endl;
+        return;
+    }
+
+    for(int i=0; i<root->children.size(); i++){
+        printAtLevelK(root->children[i], k-1);
+    }
+}
+
+//first children then root order
+void printPostOrder(TreeNode<int>* root) {          
+    if(root == NULL) return;
+    //if(root->children.size()==0) cout<< root->data;
+    
+    for(int i =0; i<root->children.size(); i++){
+        printPostOrder(root->children[i]);
+    }
+    cout<<root->data<<" ";
+}
+
+//print nodes level wise
+void printLevelWise(TreeNode<int>* root) {
+
+    queue<TreeNode<int>*> pendingNodes;
+    pendingNodes.push(root);
+    
+    while (pendingNodes.size() != 0) {
+        TreeNode<int>* front = pendingNodes.front();
+        pendingNodes.pop();
+        cout<< front -> data<< ":";
+        int childCount = front->children.size();
+        
+        if(childCount>0){
+            cout<<front->children[0]->data;
+            pendingNodes.push(front->children[0]);
+        }
+        for (int i = 1; i < front->children.size(); i++) {
+            cout<<","<<front->children[i]->data;
+            pendingNodes.push(front->children[i]);
+    }
+        cout<<endl;
+  }
+}
+
+//take inut level wise
+TreeNode<int> * TakeInputLevelWise(){
+
+    int rootData;
+    cout<<"Enter Root Data: "<<endl;
+    cin>>rootData;
+    TreeNode<int> *root = new TreeNode<int>(rootData);
+    queue<TreeNode<int>*> pendingNodes; 
+    pendingNodes.push(root);
+    while(pendingNodes.size() != 0){
+        TreeNode<int> *front = pendingNodes.front();
+        pendingNodes.pop();
+        cout<<"Enter number of children of "<<front->data<<endl;
+        int numChild;
+        cin>>numChild;
+        for(int i=0; i<numChild; i++){
+            int childData;
+            cout<<"Enter "<<i<<"th child of "<<front->data<<endl;
+            cin>>childData;
+            TreeNode<int> *child = new TreeNode<int> (childData);
+            front->children.push_back(child);
+            pendingNodes.push(child);
+        }            
+    }
+    return root;
+}
+
+//count total number of nodes in a tree
+int countNodes(TreeNode<int> *root){
+    int ans=1;
+
+    for(int i=0; i<root->children.size(); i++){
+        ans+=countNodes(root->children[i]);
+    }
+    return ans;
+}
+
+//take input recursive
+TreeNode<int> * TakeInput(){
+
+    int rootData;
+    cout<<"Enter Data: "<<endl;
+    cin>>rootData;
+
+    TreeNode<int> *root = new TreeNode<int>(rootData);
+
+    int n;
+    cout<<"Enter no of children of "<<rootData<<endl;
+    cin>>n;
+
+    for(int i=0; i<n; i++){
+        TreeNode<int> *child = TakeInput();
+        root->children.push_back(child);
+    }
+    return root;
+}
+
+//print tree recursive
+void printTree(TreeNode<int> *root){
+    cout<<root->data<<":";
+
+    if(root==NULL){             //edge case not base case
+        return;
+    }
+    
+    //To print 2,3, (basically children of root in the same line as root)
+    for(int i =0; i< root->children.size(); i++){
+        cout<<root->children[i]->data<<",";
+    }
+    cout<<endl;
+
+    // This will print the children and their children
+    for(int i =0; i< root->children.size(); i++){
+        printTree(root->children[i]);
+    }
+}
+
+//delete tree
+void deleteTree(TreeNode<int> *root){
+    for (int i = 0; i < root->children.size(); i++)
+    {
+        deleteTree(root->children[i]);
+    }
+    delete root;    
+}
+
+int main(){
+    TreeNode<int> *root = TakeInputLevelWise();
+    printLevelWise(root);
+    printAtLevelK(root,3);
+    int numNodes= countNodes(root);
+    cout<<"Total Nodes: "<< numNodes;
+}
