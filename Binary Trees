@@ -1,5 +1,11 @@
 /*
 For a given a Binary Tree of type integer, take input and then print the complete information of every node, when traversed in a level-order fashion.
+
+For a given Binary Tree of type integer and a number X, find whether a node exists in the tree with data X or not.
+
+For a given Binary Tree of integers, find and return the height of the tree.
+
+For a given Binary Tree of type integer, update it with its corresponding mirror image.
 *********************************************************************************************************************************************************************/
 
 #include <iostream>
@@ -20,7 +26,6 @@ class BinaryTreeNode {
 };
 
 using namespace std;
-#include "solution.h"
 
 void printLevelWise(BinaryTreeNode<int> *root) {
     if(root == NULL){
@@ -85,7 +90,71 @@ BinaryTreeNode<int>* takeInput() {
     return root;
 }
 
+bool isNodePresent(BinaryTreeNode<int> *root, int x) {
+    if(root == NULL)	return false;
+    
+    int check = false;
+    
+    if(root->data == x){
+        check = true;
+        return true;
+    }
+    
+    if(check == false && root->left != NULL){
+        check = isNodePresent(root->left,x);
+    }
+    if(check == false && root->right != NULL){
+        check = isNodePresent(root->right,x);
+    }
+    return check;
+}
+
+int height(BinaryTreeNode<int>* root) {
+    if(root == NULL)	return 0;
+    
+    int num1 = 0, num2 = 0;
+    
+    if(root->left != NULL){
+     	num1 = height(root->left);
+    }
+    if(root->right != NULL){
+        num2 = height(root->right);
+    }
+    
+    if(num1>=num2){
+        return 1 + num1;
+    }
+    else{
+        return 1 + num2;
+    }
+}
+
+void mirrorBinaryTree(BinaryTreeNode<int>* root) {
+    if(root == NULL)	return;
+    
+     if(root->left==NULL && root->right==NULL)
+        return;
+    
+    mirrorBinaryTree(root->left);
+    mirrorBinaryTree(root->right);
+    
+    BinaryTreeNode<int> * temp = root->left;
+    root->left=root->right;
+    root->right=temp;
+}
+
 int main() {
     BinaryTreeNode<int>* root = takeInput();
+    
     printLevelWise(root);
+    
+    int x;
+    cin >> x;
+    cout << ((isNodePresent(root, x)) ? "true" : "false");
+    
+    cout << height(root);
+    
+    mirrorBinaryTree(root);
+    printLevelATNewLine(root);
 }
+
